@@ -24,18 +24,34 @@ app.use(bodyParser.json());
 // Create a new customer
 app.post('/customers', (req, res) => {
   const { customer_name, gst_number, landline_num, address, email_id, pan_no } = req.body;
+
+  // Validate input
+  if (!customer_name || !gst_number || !landline_num || !address || !email_id || !pan_no) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
   const query = `
     INSERT INTO customers (customer_name, gst_number, landline_num, address, email_id, pan_no)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
   const values = [customer_name, gst_number, landline_num, address, email_id, pan_no];
 
   client.query(query, values)
-    .then(result => res.status(201).json(result.rows[0]))
-    .catch(err => res.status(400).json({ error: err.message }));
+    .then(result => {
+      const newCustomer = result.rows[0];
+      res.status(201).json({
+        message: 'Customer created successfully',
+        customer: newCustomer
+      });
+    })
+    .catch(err => {
+      console.error('Error inserting customer:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    });
 });
 
+
 // Get all customers
-app.get('/customers', (req, res) => {
+app.get('/all-customers', (req, res) => {
   client.query('SELECT * FROM customers')
     .then(result => res.json(result.rows))
     .catch(err => res.status(400).json({ error: err.message }));
