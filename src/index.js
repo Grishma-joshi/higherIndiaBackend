@@ -1,18 +1,24 @@
-// index.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Client } = require('pg');
-const config = require('./config');
 
 const app = express();
 const port = 3000;
 
-const client = new Client(config.database);
+// PostgreSQL database connection configuration using URL
+const client = new Client({
+  connectionString: 'postgresql://higherindia_user:MG4SB8t10U2XDt41WU0zI4qbKKpLBWuA@dpg-cqd4o9bv2p9s73e7lgsg-a/higherindia',
+  ssl: {
+    rejectUnauthorized: false // You may need this line if connecting to a hosted service that uses SSL
+  }
+});
 
+// Connect to PostgreSQL database
 client.connect()
   .then(() => console.log('Connected to PostgreSQL'))
   .catch(err => console.error('Connection error', err.stack));
 
+// Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
 // Create a new customer
@@ -70,7 +76,7 @@ app.put('/customers/:id', (req, res) => {
     .catch(err => res.status(400).json({ error: err.message }));
 });
 
-
+// Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
