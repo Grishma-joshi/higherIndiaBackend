@@ -1,9 +1,10 @@
-const createTablesQuery = `
--- Drop tables if they already exist
-DROP TABLE IF EXISTS customers CASCADE;
-DROP TABLE IF EXISTS contacts CASCADE;
+const { Client } = require('pg');
+const config = require('./config');
 
--- Create the customers table
+const createTablesQuery = `
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS contacts;
+
 CREATE TABLE IF NOT EXISTS customers (
     customer_id SERIAL PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
@@ -16,7 +17,6 @@ CREATE TABLE IF NOT EXISTS customers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create the contacts table
 CREATE TABLE IF NOT EXISTS contacts (
     contact_id SERIAL PRIMARY KEY,
     contact_person VARCHAR(100) NOT NULL,
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 `;
 
+const client = new Client(config.database);
 
 client.connect()
   .then(() => client.query(createTablesQuery))
@@ -38,7 +39,7 @@ client.connect()
     console.log('Tables created successfully');
   })
   .catch(err => {
-    console.error('Error creating tables', err);
+    console.error('Error creating tables:', err);
   })
   .finally(() => {
     client.end();
