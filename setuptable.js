@@ -1,12 +1,13 @@
-// setup-tables.js
-const { Client } = require('pg');
-const config = require('./config');
-
 const createTablesQuery = `
+-- Drop tables if they already exist
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS contacts CASCADE;
+
+-- Create the customers table
 CREATE TABLE IF NOT EXISTS customers (
     customer_id SERIAL PRIMARY KEY,
     customer_name VARCHAR(100) NOT NULL,
-    GSTNO VARCHAR(15),
+    gst_number VARCHAR(15),
     landline_num VARCHAR(15),
     address TEXT,
     email_id VARCHAR(100),
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS customers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create the contacts table
 CREATE TABLE IF NOT EXISTS contacts (
     contact_id SERIAL PRIMARY KEY,
     contact_person VARCHAR(100) NOT NULL,
@@ -29,7 +31,6 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 `;
 
-const client = new Client(config.database);
 
 client.connect()
   .then(() => client.query(createTablesQuery))
