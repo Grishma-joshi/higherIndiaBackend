@@ -7,7 +7,7 @@ const port = 3000;
 
 // PostgreSQL database connection configuration
 const client = new Client({
-  connectionString: 'postgresql://higherindia_user:MG4SB8t10U2XDt41WU0zI4qbKKpLBWuA@dpg-cqd4o9bv2p9s73e7lgsg-a/higherindia',
+  connectionString: 'postgresql://higherindia:reHRr8tvVUhyIWv7lQrzIUuPe1e7N5vM@dpg-cqfnlk56l47c73bhukrg-a/higher_india_owbr',
   ssl: {
     rejectUnauthorized: false // Necessary for some hosted services that use SSL
   }
