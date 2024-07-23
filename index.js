@@ -10,7 +10,7 @@ const { Pool } = require('pg');
 
 // Create a new pool instance
 const client = new Client({
-  connectionString: 'postgresql://higher_india_ibx7_user:Md90nqkYE5TZvVmUtGFS2q6qn0DyNG8G@dpg-cqfnvfhu0jms7385n59g-a/higher_india_ibx7',
+  connectionString: 'postgresql://customer_dashboard_user:LZuKobHgcEP1q69mxnC2Pj5NF7e7hAT8@dpg-cqfoijd6l47c73bifd2g-a/customer_dashboard',
   ssl: {
     rejectUnauthorized: false // Necessary for some hosted services that use SSL
   }
