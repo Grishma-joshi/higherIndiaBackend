@@ -33,7 +33,7 @@
 // // config.js
 module.exports = {
   database: {
-    connectionString: 'postgresql://consumer_dashboard_user:DqTTmd7xeQ7t0T6wftQ0Pb5LhEJUWhWb@dpg-cqfphpqju9rs73c1n7c0-a/consumer_dashboard',
+    connectionString: 'postgresql://consumer_dashboard_0ol6_user:ET3IK8cWJbWAamqE2PZdAvfnipK8cUFx@dpg-cqgucsaju9rs73ecffg0-a/consumer_dashboard_0ol6',
     ssl: {
       rejectUnauthorized: false
     }
