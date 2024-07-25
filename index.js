@@ -177,8 +177,20 @@ const client = new Client(config.database);
 
 // Connect to PostgreSQL database
 client.connect()
-  .then(() => console.log('Connected to PostgreSQL'))
-  .catch(err => console.error('Connection error', err.stack));
+  .then(() => {
+    console.log('Connected to PostgreSQL');
+    return createTables();
+  })
+  .then(() => {
+    console.log('Tables created successfully');
+    // Start the server
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  })
+  .catch(err => {
+    console.error('Error initializing the application:', err.stack);
+  });
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
@@ -268,7 +280,37 @@ app.delete('/customers/:id', (req, res) => {
     .catch(err => res.status(400).json({ error: err.message }));
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// Function to create tables
+const createTables = () => {
+  const createTablesQuery = `
+    DROP TABLE IF EXISTS customers;
+    DROP TABLE IF EXISTS contacts;
+
+    CREATE TABLE IF NOT EXISTS customers (
+      customer_id SERIAL PRIMARY KEY,
+      customer_name VARCHAR(100) NOT NULL,
+      gst_number VARCHAR(15),
+      landline_num VARCHAR(15),
+      address TEXT,
+      email_id VARCHAR(100),
+      pan_no VARCHAR(10),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS contacts (
+      contact_id SERIAL PRIMARY KEY,
+      contact_person VARCHAR(100) NOT NULL,
+      phone_num VARCHAR(15),
+      email_id VARCHAR(100),
+      address TEXT,
+      country VARCHAR(50),
+      state VARCHAR(50),
+      pincode VARCHAR(10),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+
+  return client.query(createTablesQuery);
+};
