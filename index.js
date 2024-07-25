@@ -168,9 +168,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Client } = require('pg');
 const config = require('./config');
-
+const cors = require('cors');
 const app = express();
 const port = 3000;
+
+app.use(cors({origin: 'http://localhost:3000'}));
 
 // PostgreSQL database connection configuration
 const client = new Client(config.database);
