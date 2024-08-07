@@ -2,8 +2,8 @@ const { Client } = require('pg');
 const config = require('./config');
 
 const createTablesQuery = `
-DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS contacts;
+DROP TABLE IF EXISTS customers;
 
    CREATE TABLE IF NOT EXISTS customers (
       customer_id SERIAL PRIMARY KEY,
