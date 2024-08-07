@@ -373,16 +373,16 @@ const createTables = () => {
     CREATE TABLE IF NOT EXISTS customers (
       customer_id SERIAL PRIMARY KEY,
       customer_name VARCHAR(100) NOT NULL,
-      gst_number VARCHAR(15),
-      landline_num VARCHAR(15),
-      email_id VARCHAR(100),
-      pan_no VARCHAR(10),
-      tan_number VARCHAR(15),
+      gst_number VARCHAR(15) UNIQUE,
+      landline_num VARCHAR(15) UNIQUE NOT NULL,
+      email_id VARCHAR(100) UNIQUE NOT NULL,
+      pan_no VARCHAR(10) UNIQUE,
+      tan_number VARCHAR(15) UNIQUE,
       address TEXT,
-      city VARCHAR(50),
-      state VARCHAR(50),
-      country VARCHAR(50),
-      pincode VARCHAR(10),
+      city VARCHAR(50) NOT NULL,
+      state VARCHAR(50) NOT NULL,
+      country VARCHAR(50) NOT NULL,
+      pincode VARCHAR(10) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -391,15 +391,18 @@ const createTables = () => {
       contact_id SERIAL PRIMARY KEY,
       customer_id INTEGER REFERENCES customers(customer_id) ON DELETE CASCADE,
       contact_person VARCHAR(100) NOT NULL,
-      phone_num VARCHAR(15),
-      email_id VARCHAR(100),
+      phone_num VARCHAR(15) UNIQUE,
+      email_id VARCHAR(100) UNIQUE,
       address TEXT,
-      city VARCHAR(50),
-      state VARCHAR(50),
-      country VARCHAR(50),
-      pincode VARCHAR(10),
-      department VARCHAR(100),
-      status VARCHAR(10) CHECK (status IN ('Active', 'Inactive')),
+      city VARCHAR(50 NOT NULL
+      state VARCHAR(50) NOT NULL,
+      country VARCHAR(50) NOT NULL,
+      pincode VARCHAR(10) NOT NULL,
+      department VARCHAR(100) NOT NULL,
+      designation VARCHAR(100),
+      date_of_start DATE,
+      date_of_end DATE,
+      status VARCHAR(10) CHECK (status IN ('active', 'inactive')),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -530,17 +533,17 @@ app.delete('/customers/:id', (req, res) => {
 
 // Create a new contact
 app.post('/contacts', (req, res) => {
-  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, status } = req.body;
+  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status } = req.body;
 
   // Validate input
-  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !status) {
+  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !designation || !date_of_start || !date_of_end || !status) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const query = `
-    INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, status)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`;
-  const values = [customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, status];
+    INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`;
+  const values = [customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status];
 
   client.query(query, values)
     .then(result => {
@@ -586,18 +589,18 @@ app.get('/contacts/:id', (req, res) => {
 // Update a contact by ID
 app.put('/contacts/:id', (req, res) => {
   const id = req.params.id;
-  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, status } = req.body;
+  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status } = req.body;
 
   // Validate input
-  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !status) {
+  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !designation || !date_of_start || !date_of_end || !status) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const query = `
     UPDATE contacts
-    SET customer_id = $1, contact_person = $2, phone_num = $3, email_id = $4, address = $5, city = $6, state = $7, country = $8, pincode = $9, department = $10, status = $11, updated_at = CURRENT_TIMESTAMP
-    WHERE contact_id = $12 RETURNING *`;
-  const values = [customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, status, id];
+    SET customer_id = $1, contact_person = $2, phone_num = $3, email_id = $4, address = $5, city = $6, state = $7, country = $8, pincode = $9, department = $10, designation = $11, date_of_start = $12, date_of_end = $13, status = $14, updated_at = CURRENT_TIMESTAMP
+    WHERE contact_id = $15 RETURNING *`;
+  const values = [customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status, id];
 
   client.query(query, values)
     .then(result => {
