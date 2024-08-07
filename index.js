@@ -373,7 +373,7 @@ const createTables = () => {
     CREATE TABLE IF NOT EXISTS customers (
       customer_id SERIAL PRIMARY KEY,
       customer_name VARCHAR(100) NOT NULL,
-      gst_number VARCHAR(15) UNIQUE,
+      gst_number VARCHAR(15),
       landline_num VARCHAR(15) UNIQUE NOT NULL,
       email_id VARCHAR(100) UNIQUE NOT NULL,
       pan_no VARCHAR(10) UNIQUE,
@@ -432,11 +432,6 @@ client.connect()
 app.post('/customers', (req, res) => {
   const { customer_name, gst_number, landline_num, email_id, pan_no, tan_number, address, city, state, country, pincode } = req.body;
 
-  // Validate input
-  if (!customer_name || !gst_number || !landline_num || !email_id || !pan_no || !tan_number || !address || !city || !state || !country || !pincode) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
   const query = `
     INSERT INTO customers (customer_name, gst_number, landline_num, email_id, pan_no, tan_number, address, city, state, country, pincode) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`;
@@ -488,11 +483,6 @@ app.put('/customers/:id', (req, res) => {
   const id = req.params.id;
   const { customer_name, gst_number, landline_num, email_id, pan_no, tan_number, address, city, state, country, pincode } = req.body;
 
-  // Validate input
-  if (!customer_name || !gst_number || !landline_num || !email_id || !pan_no || !tan_number || !address || !city || !state || !country || !pincode) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
   const query = `
     UPDATE customers
     SET customer_name = $1, gst_number = $2, landline_num = $3, email_id = $4, pan_no = $5, tan_number = $6, address = $7, city = $8, state = $9, country = $10, pincode = $11, updated_at = CURRENT_TIMESTAMP
@@ -534,11 +524,6 @@ app.delete('/customers/:id', (req, res) => {
 // Create a new contact
 app.post('/contacts', (req, res) => {
   const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status } = req.body;
-
-  // Validate input
-  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !designation || !date_of_start || !date_of_end || !status) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
 
   const query = `
     INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status)
@@ -590,11 +575,6 @@ app.get('/contacts/:id', (req, res) => {
 app.put('/contacts/:id', (req, res) => {
   const id = req.params.id;
   const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status } = req.body;
-
-  // Validate input
-  if (!customer_id || !contact_person || !phone_num || !email_id || !address || !city || !state || !country || !pincode || !department || !designation || !date_of_start || !date_of_end || !status) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
 
   const query = `
     UPDATE contacts
