@@ -394,7 +394,7 @@ const createTables = () => {
       phone_num VARCHAR(15) UNIQUE,
       email_id VARCHAR(100) UNIQUE,
       address TEXT,
-      city VARCHAR(50 NOT NULL
+      city VARCHAR(50) NOT NULL
       state VARCHAR(50) NOT NULL,
       country VARCHAR(50) NOT NULL,
       pincode VARCHAR(10) NOT NULL,
