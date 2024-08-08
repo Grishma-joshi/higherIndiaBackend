@@ -524,7 +524,16 @@ app.delete('/customers/:id', (req, res) => {
 // Create a new contact
 app.post('/contacts', (req, res) => {
   const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_end, status } = req.body;
-  const date_of_start = req.body.date_of_start || new Date().toISOString().split('T')[0]; 
+  
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  
+  const date_of_start = req.body.date_of_start || formatDate(new Date()); 
 
   const query = `
     INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status)
