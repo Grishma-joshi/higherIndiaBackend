@@ -34,6 +34,9 @@ DROP TABLE IF EXISTS customers;
       country VARCHAR(50),
       pincode VARCHAR(10),
       department VARCHAR(100),
+      designation VARCHAR(100),
+      date_of_start DATE,
+      date_of_end DATE,
       status VARCHAR(10) CHECK (status IN ('active', 'inactive')),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

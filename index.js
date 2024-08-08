@@ -523,7 +523,7 @@ app.delete('/customers/:id', (req, res) => {
 
 // Create a new contact
 app.post('/contacts', (req, res) => {
-  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_end, status } = req.body;
+  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_end , status } = req.body;
   const date_of_start = req.body.date_of_start || new Date().toISOString().split('T')[0];
   const query = `
     INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status)
