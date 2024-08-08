@@ -523,19 +523,7 @@ app.delete('/customers/:id', (req, res) => {
 
 // Create a new contact
 app.post('/contacts', (req, res) => {
-  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_end, status } = req.body;
-  
-  const formatDate = (date) => {
-    if (!date) return null;
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day} ${month} ${year}`;
-  };
-  
-  
-  const date_of_start = req.body.date_of_start || new Date().toISOString().split('T')[0];
-
+  const { customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status } = req.body;
 
   const query = `
     INSERT INTO contacts (customer_id, contact_person, phone_num, email_id, address, city, state, country, pincode, department, designation, date_of_start, date_of_end, status)
@@ -545,11 +533,6 @@ app.post('/contacts', (req, res) => {
   client.query(query, values)
     .then(result => {
       const newContact = result.rows[0];
-
-      newContact.date_of_start = formatDate(new Date(newContact.date_of_start));
-      newContact.date_of_end = formatDate(new Date(newContact.date_of_end));
-      
-
       res.status(201).json({
         message: 'Contact created successfully',
         contact: newContact
