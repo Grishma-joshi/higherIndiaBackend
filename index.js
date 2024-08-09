@@ -599,25 +599,8 @@ app.put('/contacts/:id', (req, res) => {
 });
 
 // Delete a contact by ID
-// app.delete('/contacts/:id', (req, res) => {
-//   const id = req.params.id;
-//   const query = 'DELETE FROM contacts WHERE contact_id = $1 RETURNING *';
-//   client.query(query, [id])
-//     .then(result => {
-//       if (result.rows.length > 0) {
-//         res.json({ message: 'Contact deleted successfully', contact: result.rows[0] });
-//       } else {
-//         res.status(404).json({ error: 'Contact not found' });
-//       }
-//     }) 
-//     .catch(err => {
-//       console.error('Error deleting contact:', err);
-//       res.status(500).json({ error: 'Internal server error' });
-//     });
-// });
-
 app.delete('/contacts/:id', (req, res) => {
-  const id = parseInt(req.params.id, 10);  // Convert the id to an integer
+  const id = req.params.id;
   const query = 'DELETE FROM contacts WHERE contact_id = $1 RETURNING *';
   client.query(query, [id])
     .then(result => {
@@ -626,9 +609,26 @@ app.delete('/contacts/:id', (req, res) => {
       } else {
         res.status(404).json({ error: 'Contact not found' });
       }
-    })
+    }) 
     .catch(err => {
       console.error('Error deleting contact:', err);
       res.status(500).json({ error: 'Internal server error' });
     });
 });
+
+// app.delete('/contacts/:id', (req, res) => {
+//   const id = parseInt(req.params.id, 10);  // Convert the id to an integer
+//   const query = 'DELETE FROM contacts WHERE contact_id = $1 RETURNING *';
+//   client.query(query, [id])
+//     .then(result => {
+//       if (result.rows.length > 0) {
+//         res.json({ message: 'Contact deleted successfully', contact: result.rows[0] });
+//       } else {
+//         res.status(404).json({ error: 'Contact not found' });
+//       }
+//     })
+//     .catch(err => {
+//       console.error('Error deleting contact:', err);
+//       res.status(500).json({ error: 'Internal server error' });
+//     });
+// });
